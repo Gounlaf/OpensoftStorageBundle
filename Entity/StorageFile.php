@@ -5,6 +5,8 @@ namespace Opensoft\StorageBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gaufrette\File as GaufretteFile;
 use Gaufrette\Filesystem;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * StorageFile - an entity representing a stored file in our storage system.
@@ -77,6 +79,13 @@ class StorageFile extends GaufretteFile
     private $contentHash;
 
     /**
+     * @var string|\Ramsey\Uuid\UuidInterface
+     *
+     * @ORM\Column(type="uuid_binary")
+     */
+    protected $uuid;
+
+    /**
      * Constructor
      *
      * @param string $key
@@ -88,6 +97,7 @@ class StorageFile extends GaufretteFile
         parent::__construct($key, $filesystem);
         $this->storage = $storage;
         $this->createdAt = new \DateTime();
+        $this->uuid = Uuid::uuid4();
     }
 
     /**
@@ -231,5 +241,29 @@ class StorageFile extends GaufretteFile
         $suffixes = array('', 'k', 'M', 'G', 'T');
 
         return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+    }
+
+    /**
+     * @return string|UuidInterface
+     */
+    public function getUuid()
+    {
+        if (is_string($this->uuid)) {
+            $this->uuid = Uuid::fromString($this->uuid);
+        }
+        
+        return $this->uuid;
+    }
+
+    /**
+     * @param string|UuidInterface $uuid
+     */
+    public function setUuid($uuid)
+    {
+        if (is_string($uuid)) {
+            $uuid = Uuid::fromString($uuid);
+        }
+
+        $this->uuid = $uuid;
     }
 }

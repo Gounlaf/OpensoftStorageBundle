@@ -2,9 +2,9 @@
 
 namespace Opensoft\StorageBundle\Entity;
 
+use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Opensoft\StorageBundle\Storage\Adapter\AwsS3AdapterConfiguration;
 use Opensoft\StorageBundle\Storage\Adapter\LocalAdapterConfiguration;
 
@@ -36,7 +36,6 @@ class Storage
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Gedmo\Slug(fields={"name"})
      */
     private $slug;
 
@@ -107,6 +106,7 @@ class Storage
     public function setName($name)
     {
         $this->name = $name;
+        $this->slug = (string) Slugify::create($this->name);
     }
 
     /**

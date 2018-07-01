@@ -143,9 +143,10 @@ class StorageFile extends GaufretteFile
      */
     public function setContent($content, $metadata = array())
     {
+        $size = parent::setContent($content, $metadata);
         $this->contentHash = md5($content);
 
-        return parent::setContent($content, $metadata);
+        return $size;
     }
 
     /**

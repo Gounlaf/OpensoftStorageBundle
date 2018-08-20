@@ -106,7 +106,7 @@ class Storage
     public function setName($name)
     {
         $this->name = $name;
-        $this->slug = (string) Slugify::create($this->name);
+        $this->slug = (string) Slugify::create()->slugify($this->name);
     }
 
     /**
